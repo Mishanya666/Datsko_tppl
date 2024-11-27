@@ -66,52 +66,52 @@ sum_x_loop:
     jl sum_x_loop     
 
     ;Вычисление суммы массива y также как и x
-    xor edx, edx      ; Очищаем edx для суммы y
-    xor ebx, ebx      ; Очищаем ebx, он будет использоваться как индекс для массива y
+    xor edx, edx      
+    xor ebx, ebx      
 sum_y_loop:
-    xor ecx, ecx      ; Очищаем ecx перед добавлением
-    mov cl, [y + ebx] ; Загружаем значение из массива y в cl
-    add dl, cl        ; Прибавляем значение к сумме в dl
-    inc ebx           ; Увеличиваем индекс
-    cmp ebx, len_y    ; Сравниваем индекс с длиной массива y
+    xor ecx, ecx   
+    mov cl, [y + ebx] 
+    add dl, cl     
+    inc ebx           
+    cmp ebx, len_y    
     jl sum_y_loop     ; Если индекс меньше длины, повторяем цикл
 
-    ; Шаг 3: Вычисление разницы между суммами (упрощенно)
-    cmp al, dl        ; Сравниваем суммы sum_x и sum_y
+    ;Вычисление разницы между суммами
+    cmp al, dl       
     je no_difference  ; Если они равны, разницы нет
     jg x_greater      ; Если sum_x > sum_y, переходим к x_greater
 
     ; sum_x < sum_y
-    mov byte [minus], '-'  ; Печатаем знак минус для отрицательного результата
+    mov byte [minus], '-' 
     print_string minus, 1
-    sub dl, al             ; Вычисляем разницу sum_y - sum_x
+    sub dl, al            
     mov [diff], dl
     jmp calculate_mean
 
 x_greater:
-    sub al, dl             ; Вычисляем разницу sum_x - sum_y
+    sub al, dl            
     mov [diff], al
 
 no_difference:
     mov byte [diff], 0     ; Если суммы равны, разница равна 0
 
 calculate_mean:
-    mov ecx, len_x        ; Длина массива x
+    mov ecx, len_x       
     xor ebx, ebx
-    mov bl, len_x         ; Сохраняем длину x в bl
+    mov bl, len_x         
     xor edx, edx
-    mov al, [diff]        ; Загружаем разницу в al
-    idiv bl               ; Делим на количество элементов в x
+    mov al, [diff]     
+    idiv bl               
     mov [mean], al
 
     mov rax, [mean]
-    debug_print           ; Отладочный вывод результата (среднего значения)
+    debug_print           
 
-    print_string newline, nlen  ; Печатаем новую строку
+    print_string newline, nlen  
 
-    mov eax, 1            ; Номер системного вызова для завершения
-    xor ebx, ebx          ; Код возврата 0
-    int 0x80              ; Выполняем системный вызов для выхода
+    mov eax, 1            
+    xor ebx, ebx          
+    int 0x80        
 
 section .data
     x db 5, 3, 2, 6, 1, 7, 4   ; Массив x
@@ -124,8 +124,8 @@ section .data
     mean db 0
 
     result dq 0
-    newline db 0xA, 0xD      ; Символ новой строки для печати
-    nlen equ $ - newline     ; Длина новой строки
+    newline db 0xA, 0xD     
+    nlen equ $ - newline     
 
 section .bss
     minus resb 1             
